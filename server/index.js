@@ -233,6 +233,24 @@ app.post('/api/userDetails/', (req, res) => {
 
 app.post('/api/updateDetails', (req, res) => {
   console.log("1------POST userDetails :: ",req.body );
+ 
+  console.log("1------POST userDetails accessToken :: ",req.headers.authorization );
+  try {
+    let token = '';
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+      token = req.headers.authorization.split(' ')[1];
+  }
+//    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJ1c2VySWQiOjEsInVzZXJUeXBlIjoiYWRtaW4ifQ.Ihd4cYVc2E-xJH63V8E5BsXjtGSXZlWiFINDVkcT8b0';
+    var decoded = jwt.verify(token, 'nodeApi123!679');
+    console.log("1-------decoded",decoded);
+  } catch(err) {
+    console.log("1-----jwt verify error", err);
+  }
+   if(decoded.userType === 'admin') {
+
+   } else {
+    
+   }
   const updateData = req.body;
   User.update(updateData, {
     where: { id: req.body.userId }
