@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
 	const User_Transaction = sequelize.define("user", {
-		username: {
+		name: {
 			type: Sequelize.STRING
 		},
 		role_id: {
@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
 		email: {
 			type: Sequelize.TEXT
 		},
-		mobile: {
+		accessToken: {
 			type: Sequelize.TEXT
 		},
 		password: {

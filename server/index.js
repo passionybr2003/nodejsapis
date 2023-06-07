@@ -192,10 +192,11 @@ const customHost = argv.host || process.env.HOST;
 const host = customHost || null; // Let http.Server use its default IPv6/4 host
 const prettyHost = customHost || 'localhost';
 
-app.get('*.js', (req, res, next) => {
-  req.url = req.url + '.gz'; // eslint-disable-line
-  res.set('Content-Encoding', 'gzip');
+app.get('/*', (req, res, next) => {
+  // res.setHeader('Cache-Control', 'public, max-age=2592000');
+  res.setHeader('Expires', new Date(Date.now() + 85000000).toUTCString());
   next();
+
 });
 
 
@@ -208,11 +209,15 @@ app.listen(port, host, (err) => {
 });
 
 
-//Update Data into DB
-app.get('/api/userDetails/:userId', (req, res) => {
-   console.log("1------GET userDetails :: ",req.query.userId );
-  User.findById(req.body)
-      .then((data) => {
+
+app.post('/api/userDetails/', (req, res) => {
+   console.log("1------userDetails :: ",req.body.userId );
+   
+  User.findOne({
+    where: {
+       id: req.body.userId
+    }
+  }).then((data) => {
         res.send({
           message: data,
         });
@@ -223,8 +228,79 @@ app.get('/api/userDetails/:userId', (req, res) => {
             err.message || 'Something went wrong',
         });
       });
+    
 });
 
+app.post('/api/updateDetails', (req, res) => {
+  console.log("1------POST userDetails :: ",req.body );
+  const updateData = req.body;
+  User.update(updateData, {
+    where: { id: req.body.userId }
+  })
+  .then(num => {
+    if (num == 1) {
+      res.send({
+        message: "User details has been updated successfully."
+      });
+    } else {
+      res.send({
+        message: `User details not updated `
+      });
+    }
+  })
+  .catch(err => {
+    res.status(500).send({
+      message:
+        err.message || "Something went wrong"
+    });
+  });
+});
+
+
+app.post('/api/allUsers/', (req, res) => {
+  console.log("1------allUsers :: ",req.body.userId );
+  
+ User.findAll().then((data) => {
+       res.send({
+         message: data,
+       });
+     })
+     .catch((err) => {
+       res.status(500).send({
+         message:
+           err.message || 'Something went wrong',
+       });
+     });
+   
+});
+
+app.post('/api/deleteUser/', (req, res) => {
+  console.log("1------deleteUsers :: ",req.body.userId );
+  
+ User.destroy({
+  where: {
+     id: req.body.userId 
+  }
+}).then((data) => {
+    console.log("1--------del ", data);
+    if(data === 1) {
+       res.send({
+         message: "User has been removed",
+       });
+      } else {
+        res.send({
+          message: "User not exist",
+        });
+      }
+     })
+     .catch((err) => {
+       res.status(500).send({
+         message:
+           err.message || 'Something went wrong',
+       });
+     });
+   
+});
 
 
 
