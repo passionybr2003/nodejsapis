@@ -1,0 +1,90 @@
+@import "styles/variables.scss";
+
+.sidemenu {
+  height: 100vh;
+  width: 300px !important;
+  flex-direction: row !important;
+  flex-flow: column !important;
+  @media (max-width: $screen-xxs-max) {
+    width: 270px !important;
+  }
+  .menu-header {
+    padding-bottom: 20px;
+    .menulogo {
+      width: 25px;
+    }
+  }
+  .sidemenu_content {
+    padding: 20px 15px;
+  }
+  .sidemenu_footer {
+    background: $secondary;
+    padding: 30px 90px 20px 15px;
+    color: $white;
+    h5 {
+      font-weight: $font_semi_bold;
+      color: $white;
+    }
+    p {
+      font-size: 9.75pt;
+      color: $white;
+    }
+  }
+  .CategoriesList {
+    .list {
+      width: 140px;
+      margin: 0 5px 10px 5px;
+      padding: 5px;
+      background: none;
+      box-shadow: none;
+      color: $secondary;
+      border: none;
+      flex-direction: row;
+      text-align: left;
+      align-items: center;
+      justify-content: flex-start;
+      @media (max-width: $screen-xxs-max) {
+        width: 105px;
+        height: 90px;
+      }
+      &:after {
+        display: none;
+      }
+      h4 {
+        font-size: 9.75pt !important;
+        color: $secondary;
+        text-align: left;
+      }
+      i {
+        font-size: 19pt;
+        padding: 6px;
+        margin-right: 5px;
+        color: $primary;
+      }
+      svg {
+        font-size: 27pt;
+        padding: 6px;
+        margin-right: 5px;
+        path,
+        circle {
+          fill: $primary;
+        }
+      }
+      &:hover {
+        svg,
+        i {
+          background-color: $tertiary;
+        }
+      }
+    }
+  }
+}
+
+.head_backnav {
+  color: $textColor !important;
+  margin-bottom: 30px !important;
+
+  a {
+    padding-right: 15px;
+  }
+}

@@ -1,0 +1,293 @@
+@import 'styles/variables.scss';
+@import 'styles/mixins.scss';
+
+.dynamicTable {
+  font-family: $acumin_pro;
+  width: 100%;
+}
+
+.tableTrans {
+  &.noFilter {
+    .dynamicTable {
+      background-color: transparent;
+
+      > div {
+        > div:first-child {
+          background-color: transparent;
+        }
+
+        > div:nth-child(2) {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  .dynamicTable {
+    background-color: transparent;
+
+    > div {
+      > div:first-child {
+        background-color: transparent;
+      }
+
+      > div:nth-child(2) {
+        background-color: $tertiary;
+      }
+    }
+
+    table {
+      thead {
+        tr {
+          th {
+            background-color: transparent;
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          &:nth-child(odd) {
+            background-color: $white;
+          }
+
+          &:nth-child(even) {
+            background-color: transparent;
+          }
+        }
+      }
+    }
+  }
+}
+
+.filtersAlign {
+  .dynamicTable {
+    div[class*='MuiToolbar-root-'],
+    div[class^='MuiToolbar-root-'] {
+      padding-right: 90px;
+    }
+
+    div[class*='MuiTablePagination-toolbar-'],
+    div[class^='MuiTablePagination-toolbar-'] {
+      padding-right: 0;
+    }
+  }
+}
+
+.showCursor {
+  tr {
+    cursor: pointer;
+  }
+}
+
+.noFilters {
+  padding-top: 35px;
+}
+
+.NestedAltBG {
+  > div {
+    // > div:first-child {
+    //   background-color: transparent;
+    // }
+    // > div:nth-child(2) {
+    //   background-color: rgba(#f5f5f5, 1);
+    // }
+    div[class*='MuiToolbar-root-'],
+    div[class^='MuiToolbar-root-'] {
+      background-color: transparent;
+    }
+
+    div[class*='MUIDataTableFilterList-root-'],
+    div[class^='MUIDataTableFilterList-root-'] {
+      background-color: $tertiary;
+    }
+  }
+
+  table {
+    thead {
+      tr {
+        th {
+          background-color: transparent;
+        }
+      }
+    }
+
+    tbody {
+      /* tr {
+        &:nth-child(odd) {
+          // background-color: $white !important;
+        }
+        &:nth-child(even) {
+          // background-color: transparent !important;
+        } */
+
+      /*  td[class*='MUIDataTableSelectCell-root-'],
+        td[class^='MUIDataTableSelectCell-root-'] {
+          button {
+            span {
+              // position: relative;
+              // &:before {
+              //   position: absolute;
+              //   content: '+';
+              //   left: 0;
+              //   right: 0;
+              //   top: 0;
+              //   bottom: 0;
+              //   color: $primary;
+              // }
+              // svg {
+              //   visibility: hidden;
+              // }
+            }
+          }
+        } */
+
+      td {
+        .colSpanBlock {
+          table {
+            background: #e4eef6;
+
+            thead,
+            tbody {
+              tr {
+                &:nth-child(odd) {
+                  background-color: transparent !important;
+                }
+
+                &:nth-child(even) {
+                  background-color: transparent !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.evaccordion_custom {
+  .NestedAltBG {
+    tbody {
+      tr {
+        &:nth-child(odd) {
+          background-color: $white !important;
+        }
+
+        &:nth-child(even) {
+          background-color: transparent !important;
+        }
+      }
+    }
+
+    .bgWrap {
+      background: #f6f6f6;
+    }
+  }
+}
+.evaccordion_custom_tableAcc {
+  .NestedAltBG {
+    tbody {
+      tr {
+        &:nth-child(odd) {
+          background-color: $white !important;
+        }
+
+        &:nth-child(even) {
+          background-color: transparent !important;
+        }
+      }
+    }
+  }
+}
+.custom_acc_table{
+  border-bottom: transparent!important;
+}
+
+.nestedTableCustom {
+  thead {
+    th[class*='MUIDataTableSelectCell-headerCell-'],
+    th[class^='MUIDataTableSelectCell-headerCell-'] {
+      > div {
+        button {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  td[class*='MUIDataTableSelectCell-root-'],
+  td[class^='MUIDataTableSelectCell-root-'] {
+    button {
+      border: 1px solid $tertiary;
+
+      @include border-radius(4px);
+
+      padding: 0;
+      margin: 7px;
+      width: 20px;
+      height: 20px;
+
+      svg {
+        font-size: 18px;
+      }
+
+      svg[class*='MUIDataTableSelectCell-icon-'],
+      svg[class^='MUIDataTableSelectCell-icon-'] {
+        transform: rotate(90deg);
+      }
+
+      svg[class*='MUIDataTableSelectCell-expanded-'],
+      svg[class^='MUIDataTableSelectCell-expanded-'] {
+        transform: rotate(-90deg);
+      }
+    }
+  }
+}
+
+.hideToolBar {
+  div[class*='MUIDataTableToolbarSelect-root-'],
+  div[class^='MUIDataTableToolbarSelect-root-'] {
+    display: none;
+  }
+}
+
+.EligibleAlign {
+  table tr td {
+    padding: 0 10px !important;
+  }
+
+  .dynamicTable {
+    div[class*='MuiToolbar-root-'],
+    div[class^='MuiToolbar-root-'] {
+      padding-right: 10px;
+    }
+
+    div[class*='MuiTablePagination-toolbar-'],
+    div[class^='MuiTablePagination-toolbar-'] {
+      padding-right: 8px;
+      padding-left: 8px;
+    }
+  }
+}
+
+.toolbarTablePosition {
+  margin-top: -30px !important;
+}
+
+.darkTheme {
+  .colSpanBlock {
+    table {
+      background: rgba($secondaryRGB, 0.6) !important;
+
+      thead tr th {
+        background: $secondary !important;
+        color: #fff;
+      }
+
+      tbody tr td {
+        color: #fff;
+      }
+    }
+  }
+}

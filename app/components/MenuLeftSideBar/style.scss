@@ -1,0 +1,10 @@
+@import 'styles/variables.scss';
+
+.menuShadow {
+    ul {
+        box-shadow: 1px 1px 1px #ccc;
+    }
+}
+   .MuiListItemIcon-root {   
+        min-width: 46px!important;
+      }    

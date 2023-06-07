@@ -1,0 +1,23 @@
+@import 'styles/variables.scss';
+
+.generic_content {
+   
+    img {
+        margin-bottom: 0px;
+        max-width: 100%;
+        display: inline-block;
+        text-align: right;
+    }
+    h1 {
+        padding-top:20%;
+        font-weight: $font_bold!important;
+        text-align: left;
+    }
+    p {
+        font-size: 13.5pt;
+        font-weight: $font_semi_bold;
+        color: $primary;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+}

@@ -1,0 +1,21 @@
+@import 'styles/variables.scss';
+
+.ev-icon {
+  width: 54px;
+  img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+  }
+}
+
+.ev_icon {
+  color: $primary;
+  line-height: 23px;
+  img {
+    margin-right: 5px;
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+}

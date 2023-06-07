@@ -1,0 +1,13 @@
+div[role=presentation]{
+    div[role=dialog]{
+        max-width: 662px;
+        width: 100%;
+        border-radius: 4px;
+        >div:last-child {
+            padding: 30px 40px 50px !important;
+            @media screen and (min-width:320px) and (max-width:599px){
+                padding: 30px 20px 40px !important;
+            }
+        }
+    }
+}

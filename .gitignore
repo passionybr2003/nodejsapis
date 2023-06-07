@@ -1,0 +1,24 @@
+# Don't check auto-generated stuff into git
+coverage
+build
+node_modules
+stats.json
+package-lock.json
+yarn.lock
+
+# Cruft
+.DS_Store
+npm-debug.log
+.idea
+
+# Logs
+yarn-error.log
+__snapshots__/
+.vscode/settings.json
+.logs/
+
+log/
+
+#master data files
+app/config/masterData.js
+server/data/masterData.js

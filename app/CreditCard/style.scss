@@ -1,0 +1,175 @@
+@import "styles/global-styles.scss";
+@import "styles/variables.scss";
+
+.ccForm{
+    width: 100%;
+    > div{
+        > div{
+            position: relative;
+        }
+    }
+    .m-40{
+        margin-top: 40px;
+    }
+    .ccBlock{
+        background: #fff;
+        padding: 24px 24px 32px;
+        border-radius: 4px;
+        border-bottom: 2px solid rgba(243, 244, 245,0.4);
+        .imgBlock{
+            position: absolute;
+            top: 15px;
+            right: 0;
+            img{
+                width: 40px;
+                height: 24px;
+                padding: 2px;
+                @media screen and (max-width:599px) {
+                    width: 34px;
+                    height: 24px;
+                }
+            }
+        }
+        
+        .marginTop{
+            margin-top: 40px;
+        }
+        .marginValue{
+            margin-top: 12px;
+            font-family: "Roboto";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+        }
+    }
+
+    .errorContainer{
+        p{
+            font-family: "Roboto";
+            font-style: normal;
+            font-weight: normal;
+            font-size: 12px;
+            color: #FF3B30;
+            text-align: center;
+        }
+    }
+    .errorMargin{
+        margin-top: 20px;
+    }
+
+    #mobileTooltip{
+        display: none;
+    }
+}
+
+
+
+
+
+.tooltipBg{
+    background-color:transparent;
+    z-index: 9999;
+    position: fixed;
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+div[role=presentation]{
+    div[role=dialog]{
+        >div{
+            button{
+                &:hover{
+                    background-color: transparent;
+                }
+                span{
+                    svg{
+                        width: 1.2rem;
+                        height: 1.2rem;
+                        fill: $black;
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+        .usedCCBlock{
+            p:first-child{
+                font-family: 'Knockout';
+                font-style: normal;
+                font-weight: normal;
+                font-size: 32px;
+                line-height: 26px;
+                text-transform: uppercase;
+                color: $black;
+            }
+            .subText{
+                font-family: 'Roboto';
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                line-height: 17px;
+                color: $black;
+                margin-top: 15px;
+            }
+            .btnBlock{
+                margin-top: 30px;
+                >div{
+                    &:first-child{
+                        padding-right: 10px;
+                        @media screen and (min-width:320px) and (max-width:599px){
+                            padding-right: 0;
+                        }
+                    }
+                    &:last-child{
+                        padding-left: 10px;
+                        @media screen and (min-width:320px) and (max-width:599px){
+                            padding-left: 0;
+                            margin-top: 15px;
+                        }
+                    }
+                    button{
+                        font-family: 'Roboto Condensed';
+                        font-style: normal;
+                        font-weight: bold;
+                        font-size: 20px;
+                        line-height: 20px;
+                        color: $btnBgText;
+                        border: 1px solid $btnBgText;
+                        border-radius: 4px;
+                        padding: 12px 20px;
+                        // max-width: 275px;
+                        width: 100%;
+                        text-transform: none;
+                        &.selected{
+                            background: $btnBgText;
+                            color: $white;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width:320px) and (max-width:1024px){
+    .cvvField div[role="tooltip"]{
+        margin-left: 0px;
+        > div{
+            >span{
+                display: none;
+            }
+        }
+    }
+    .tooltipBg{
+        z-index: 9999;
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        position: fixed;
+        margin: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+    }
+}
