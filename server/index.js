@@ -234,7 +234,8 @@ app.post('/api/allUsers/', (req, res) => {
   const jwtInfo = decodeAccessToken(req.headers);
   if( jwtInfo.userType === 'admin' ) {
     User.findAll({
-      where: { role_id: 2 }
+      where: { role_id: 2 },
+      attributes: ['id','name', 'email']
     }).then((data) => {
           Logger.info('All User Info => ', data);
           if(data.length > 0) {
