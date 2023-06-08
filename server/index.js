@@ -2,38 +2,37 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
 /* eslint consistent-return:0 */
-const dotenv = require('dotenv');
+var dotenv = require('dotenv');
 
 dotenv.config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const logger = require('./util//logger');
-const cookieParser = require('cookie-parser');
-const cors = require('cors');
-const session = require('express-session');
-const argv = require('./util/argv');
-const port = require('./util//port');
-const path = require('path');
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const aws = require('aws-sdk');
-const Router = require('./routes/index');
-const config = require('./config');
-const fs = require('fs');
+var express = require('express');
+var bodyParser = require('body-parser');
+var logger = require('./util//logger');
+var cookieParser = require('cookie-parser');
+var cors = require('cors');
+var session = require('express-session');
+var argv = require('./util/argv');
+var port = require('./util//port');
+var path = require('path');
+var multer = require('multer');
+var multerS3 = require('multer-s3');
+var aws = require('aws-sdk');
+var Router = require('./routes/index');
+var config = require('./config');
+var fs = require('fs');
 
-const logPath = !__dirname.startsWith('/opt')
-  ? '.logs'
-  : `/opt/evapp/logs/react-${process.env.ENVIRONMENT_NAME}`;
-const Logger = require('tracer').dailyfile({
+var logPath = '.logs';
+ 
+var Logger = require('tracer').dailyfile({
   root: logPath,
   maxLogFiles: 10,
   allLogsFileName: 'UserInfo',
 });
-const axios = require('axios');
-const jwt = require('jsonwebtoken');
-const jwt_decode = require('jwt-decode');
+var axios = require('axios');
+var jwt = require('jsonwebtoken');
+var jwt_decode = require('jwt-decode');
 
-const app = express();
+var app = express();
 app.disable('x-powered-by');
 
 // Parse JSON bodies (as sent by API clients)
@@ -46,11 +45,11 @@ app.use(cookieParser('test'));
 
 
 
-const payload = {};
+var payload = {};
 
 
 // To fetch user's IP-Address
-const requestIp = require('request-ip');
+var requestIp = require('request-ip');
 
 app.use(requestIp.mw());
 
@@ -67,10 +66,6 @@ app.disable('view cache');
 let sessionId = "-";
 let clientIP = "-";
 
-
-const doLog = (logMessage, logData = "", logSessionId = "", userIPAddress = "") => {
-  Logger.info(`Track: NodeJS Test-${process.env.ENVIRONMENT_NAME}, UserIP: ${userIPAddress}, ${logMessage}`, logData);
-}
 
 
 app.get('/*', (req, res, next) => {
@@ -91,11 +86,11 @@ if (config.ENABLE_CSRF === 'true') {
 
 
 // Database connection
-const db = require('./models/index');
+var db = require('./models/index');
 
-const Payment = db.payments;
-const User = db.users;
-const { Op } = db.Sequelize;
+var Payment = db.payments;
+var User = db.users;
+var { Op } = db.Sequelize;
 db.sequelize.sync();
 
 
@@ -106,9 +101,9 @@ app.use('/locales', express.static(path.join(__dirname, 'locales')));
 
 
 // get the intended host and port number, use localhost and port 3000 if not provided
-const customHost = argv.host || process.env.HOST;
-const host = customHost || null; // Let http.Server use its default IPv6/4 host
-const prettyHost = customHost || 'localhost';
+var customHost = argv.host || process.env.HOST;
+var host = customHost || null; // Let http.Server use its default IPv6/4 host
+var prettyHost = customHost || 'localhost';
 
 app.get('/*', (req, res, next) => {
   // res.setHeader('Cache-Control', 'public, max-age=2592000');
@@ -126,13 +121,13 @@ app.listen(port, host, (err) => {
   logger.appStarted(port, prettyHost);
 });
 
-const decodeAccessToken = (reqHeaders) => {
+var decodeAccessToken = (reqHeaders) => {
   try {
     let token = '';
     if (reqHeaders.authorization && reqHeaders.authorization.split(' ')[0] === 'Bearer') {
       token = reqHeaders.authorization.split(' ')[1];
     }
-    var decoded = jwt.verify(token, jwtSalt);
+    var decoded = jwt.verify(token, 'nodeApi123!679');
     console.log("1-------decoded",decoded);
     return decoded;
   } catch(err) {
@@ -166,20 +161,20 @@ app.post('/api/updateDetails', (req, res) => {
   console.log("POST userDetails :: ",req.body );
  
   console.log("POST userDetails accessToken :: ",req.headers.authorization );
-  /*
+  
   try {
     let token = '';
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
       token = req.headers.authorization.split(' ')[1];
   }
-//    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJ1c2VySWQiOjEsInVzZXJUeXBlIjoiYWRtaW4ifQ.Ihd4cYVc2E-xJH63V8E5BsXjtGSXZlWiFINDVkcT8b0';
+//    var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJ1c2VySWQiOjEsInVzZXJUeXBlIjoiYWRtaW4ifQ.Ihd4cYVc2E-xJH63V8E5BsXjtGSXZlWiFINDVkcT8b0';
     var decoded = jwt.verify(token, 'nodeApi123!679');
     console.log("decoded",decoded);
   } catch(err) {
     console.log("jwt verify error", err);
   }
-  */
-  const jwtInfo = decodeAccessToken(req.headers);
+  
+  var jwtInfo = decodeAccessToken(req.headers);
    if( jwtInfo.userType === 'user' ) {
       if(userInfo.hasOwnProperty('roleId')){
         res.status(403).send({
@@ -187,7 +182,7 @@ app.post('/api/updateDetails', (req, res) => {
         });
       }
    } 
-  const updateData = req.body;
+  var updateData = req.body;
   User.update(updateData, {
     where: { id: req.body.userId }
   })
@@ -212,11 +207,10 @@ app.post('/api/updateDetails', (req, res) => {
 
 
 app.post('/api/allUsers/', (req, res) => {
-  console.log("allUsers :: ",req.body.userId );
   
  User.findAll().then((data) => {
   
-  doLog('All User Info => ', data);
+  Logger.info('All User Info => ', data);
        res.send({
          message: data,
        });
@@ -233,7 +227,7 @@ app.post('/api/allUsers/', (req, res) => {
 app.post('/api/deleteUser/', (req, res) => {
   console.log("deleteUsers :: ",req.body.userId );
   
-    const jwtInfo = decodeAccessToken(req.headers);
+    var jwtInfo = decodeAccessToken(req.headers);
   if(jwtInfo.userType !== 'admin'){
     res.status(403).send({
       message: "You do not have permission to delete user",

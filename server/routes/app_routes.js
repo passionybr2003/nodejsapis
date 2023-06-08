@@ -1,10 +1,8 @@
-const express = require('express');
-const controller = require('../controllers/v1');
+var express = require('express');
+var controller = require('../controllers/v1');
 
-const router = express.Router();
+var router = express.Router();
 
-router.route('/authenticate').post(controller.app_controller.Authenticate);
-router.route('/logout').post(controller.app_controller.Logout);
 
 
 module.exports = router;

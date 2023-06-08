@@ -1,6 +1,6 @@
-//const dbConfig = require("../db_config");
+//var dbConfig = require("../db_config");
 
-const dbConfig = {
+var dbConfig = {
   HOST: process.env.DB_HOST,
   USER: process.env.DB_USER,
   PASSWORD: process.env.DB_PASSWORD,
@@ -8,14 +8,14 @@ const dbConfig = {
   dialect: "mysql"
   };
 
-const Sequelize = require("sequelize");
-const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+var Sequelize = require("sequelize");
+var sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     host: dbConfig.HOST,
     dialect: dbConfig.dialect,
     logging: false,
   });
 
-const db = {};
+var db = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;

@@ -1,7 +1,5 @@
-const appService = require('./app_service');
-const serviceHelper = require('./serviceHelper');
+var appService = require('./app_service');
+var serviceHelper = require('./serviceHelper');
 
 module.exports = {
-  appService,
-  serviceHelper,
 };

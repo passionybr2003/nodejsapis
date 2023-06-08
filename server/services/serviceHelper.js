@@ -1,8 +1,8 @@
-const config = require('../config');
-const fetch = require('node-fetch');
-const jwt_decode = require('jwt-decode');
+var config = require('../config');
+var fetch = require('node-fetch');
+var jwt_decode = require('jwt-decode');
 
-const privateDec = (data) => {
+var privateDec = (data) => {
   if (process.env.encrypt === 'yes') {
     const decrypted = jwt_decode(data);
     return decrypted;
