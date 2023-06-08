@@ -128,10 +128,10 @@ var decodeAccessToken = (reqHeaders) => {
       token = reqHeaders.authorization.split(' ')[1];
     }
     var decoded = jwt.verify(token, 'nodeApi123!679');
-    console.log("1-------decoded",decoded);
+    console.log("decoded",decoded);
     return decoded;
   } catch(err) {
-    console.log("1-----jwt verify error", err);
+    console.log("jwt verify error", err);
   }
 }
 
@@ -232,7 +232,7 @@ app.post('/api/deleteUser/', (req, res) => {
   
     var jwtInfo = decodeAccessToken(req.headers);
     if(jwtInfo.userType !== 'admin'){
-      res.status(403).send({
+      return res.status(403).send({
         message: "You do not have permission to delete user",
       });
     }
@@ -241,7 +241,7 @@ app.post('/api/deleteUser/', (req, res) => {
             id: req.body.userId 
           }
         }).then((data) => {
-            console.log("1--------del ", data);
+            console.log("del ", data);
             if(data === 1) {
               res.send({
                 message: "User has been removed",
