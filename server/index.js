@@ -164,6 +164,7 @@ app.post('/api/userDetails/', (req, res) => {
 app.post('/api/updateDetails', (req, res) => {
   console.log("POST userDetails :: ",req.body );
   const jwtInfo = decodeAccessToken(req.headers);
+  const userInfo = req.body;
    if( jwtInfo.userType === 'user' ) {
       if(userInfo.hasOwnProperty('roleId')){
         return res.status(403).send({
