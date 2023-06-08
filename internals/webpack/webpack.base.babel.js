@@ -125,12 +125,7 @@ module.exports = (options) => ({
     // inside your code for any environment checks; Terser will automatically
     // drop any unreachable code.
     new webpack.EnvironmentPlugin({
-      ENVIRONMENT_NAME: JSON.stringify(process.env.ENVIRONMENT_NAME),
-      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      BUILD_ENV: JSON.stringify(process.env.BUILD_ENV),
-      API_URL: JSON.stringify(process.env.API_URL),
-      ENABLE_CSRF: JSON.stringify(process.env.ENABLE_CSRF),
-    })
+      })
   ]),
   resolve: {
     modules: ['node_modules', 'app'],

@@ -25,24 +25,18 @@ Checkout branch -b react_test_1
 If you are not sure about the environment you need - *local env* file should be fine
 ### 3. Install Dependencies
 ```bash
-yarn install
+npm install
 ```
 ### 4. Start the application
 
 ```bash
-yarn start
+npm start
 ```
-**Note -**
-For the app to run in your local, the **REDIS_HOST** must be pointed at *127.0.0.1*
-
 ___
 
-Create DB with payment_methods
+Create DB with user_mgnt
 start npm 
-Table will created in the DB payment_methods
+Table will created in the DB user_mgnt
 
-___
 
-Load the page to add/view the Card Details
 
-http://localhost:3000/managepayment

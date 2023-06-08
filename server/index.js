@@ -8,25 +8,18 @@ dotenv.config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const logger = require('./util//logger');
-const compression = require('compression');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const session = require('express-session');
-const { redisStore } = require('./util/redis');
 const argv = require('./util/argv');
 const port = require('./util//port');
-const setup = require('./middlewares/frontendMiddleware');
 const path = require('path');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const aws = require('aws-sdk');
 const Router = require('./routes/index');
 const config = require('./config');
-const rfs = require('rotating-file-stream');
-const morganBody = require('morgan-body');
-const shortid = require('shortid');
 const fs = require('fs');
-const { cryptoJSDecryptAES, getCookieValue } = require('./util/helper');
 
 const logPath = !__dirname.startsWith('/opt')
   ? '.logs'
@@ -34,11 +27,8 @@ const logPath = !__dirname.startsWith('/opt')
 const Logger = require('tracer').dailyfile({
   root: logPath,
   maxLogFiles: 10,
-  allLogsFileName: 'React',
+  allLogsFileName: 'UserInfo',
 });
-const { nanoid } = require('nanoid');
-const csrf = require('csurf');
-const crypto = require('crypto');
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const jwt_decode = require('jwt-decode');
@@ -54,14 +44,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser('test'));
 
-// Encryption/Decryption of API request & response
 
-const privateDec = (data) => {
-  if (process.env.ENCRYPTION === 'yes') {
-    const decrypted = jwt_decode(data);
-    return decrypted;
-  } else return data;
-};
 
 const payload = {};
 
@@ -86,7 +69,7 @@ let clientIP = "-";
 
 
 const doLog = (logMessage, logData = "", logSessionId = "", userIPAddress = "") => {
-  Logger.info(`Track: NBA-${process.env.ENVIRONMENT_NAME}, UserIP: ${userIPAddress}, session-id: ${logSessionId ? decodeURIComponent(logSessionId) : "NA"}, ${logMessage}`, logData);
+  Logger.info(`Track: NodeJS Test-${process.env.ENVIRONMENT_NAME}, UserIP: ${userIPAddress}, ${logMessage}`, logData);
 }
 
 
@@ -99,29 +82,13 @@ app.get('/*', (req, res, next) => {
 });
 
 
-function shouldCompress(req, res) {
-  if (req.headers['x-no-compression']) return false;
-  return compression.filter(req, res);
-}
+
 let csrfProtection;
 if (config.ENABLE_CSRF === 'true') {
   csrfProtection = csrf();
 }
 
-const accessLogStream = rfs.createStream('access.log', {
-  interval: '1d', // rotate daily
-  path: path.join(__dirname, 'log'),
-  maxFiles: 15,
-  history: 'history.log.txt',
-});
 
-morganBody(app, {
-  stream: accessLogStream,
-  noColors: true,
-  filterParameters: ['apiPassword', 'cardNumber', 'cvv'],
-  skip: (req, res) => !req.originalUrl.includes('/api/v1'),
-  logIP: true,
-});
 
 // Database connection
 const db = require('./models/index');
@@ -131,61 +98,12 @@ const User = db.users;
 const { Op } = db.Sequelize;
 db.sequelize.sync();
 
-app.use(
-  compression({
-    level: 2, // set compression level from 1 to 9 (6 by default)
-    filter: shouldCompress, // set predicate to determine whether to compress
-  }),
-);
 
-
-
-app.use(
-  session({
-    name: config.SESS_NAME,
-    secret: config.SESS_SECRET,
-    store: redisStore,
-    saveUninitialized: false,
-    genid: (req) => nanoid(128), // use UUIDs for session IDs
-    resave: false,
-    rolling: true,
-    cookie: {
-      sameSite: true,
-      secure: false,
-      maxAge: parseInt(config.SESS_LIFETIME, 10),
-    },
-  }),
-);
-if (config.ENABLE_CSRF === 'true') {
-  app.use(csrfProtection);
-}
-
-app.use((req, res, next) => {
-  if (config.ENABLE_CSRF === 'true') {
-    res.cookie('csurf', req.csrfToken(), {
-      httpOnly: false,
-      sameSite: 'Strict',
-    });
-  }
-  res.cookie('clientId', shortid.generate(), {
-    httpOnly: true,
-    sameSite: 'Strict',
-  });
-  res.cookie('setClient', true, {
-    httpOnly: false,
-    sameSite: 'Strict',
-  });
-  next();
-});
 
 
 
 app.use('/locales', express.static(path.join(__dirname, 'locales')));
 
-setup(app, {
-  outputPath: path.resolve(process.cwd(), 'build'),
-  publicPath: '/',
-});
 
 // get the intended host and port number, use localhost and port 3000 if not provided
 const customHost = argv.host || process.env.HOST;
@@ -211,13 +129,14 @@ app.listen(port, host, (err) => {
 
 
 app.post('/api/userDetails/', (req, res) => {
-   console.log("1------userDetails :: ",req.body.userId );
+   console.log("userDetails :: ",req.body.userId );
    
   User.findOne({
     where: {
        id: req.body.userId
     }
   }).then((data) => {
+    Logger.info(' Selected User Info => ', data);
         res.send({
           message: data,
         });
@@ -232,9 +151,9 @@ app.post('/api/userDetails/', (req, res) => {
 });
 
 app.post('/api/updateDetails', (req, res) => {
-  console.log("1------POST userDetails :: ",req.body );
+  console.log("POST userDetails :: ",req.body );
  
-  console.log("1------POST userDetails accessToken :: ",req.headers.authorization );
+  console.log("POST userDetails accessToken :: ",req.headers.authorization );
   try {
     let token = '';
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -242,11 +161,11 @@ app.post('/api/updateDetails', (req, res) => {
   }
 //    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJ1c2VySWQiOjEsInVzZXJUeXBlIjoiYWRtaW4ifQ.Ihd4cYVc2E-xJH63V8E5BsXjtGSXZlWiFINDVkcT8b0';
     var decoded = jwt.verify(token, 'nodeApi123!679');
-    console.log("1-------decoded",decoded);
+    console.log("decoded",decoded);
   } catch(err) {
-    console.log("1-----jwt verify error", err);
+    console.log("jwt verify error", err);
   }
-   if(decoded.userType === 'admin') {
+   if(decoded?.userType === 'admin') {
 
    } else {
     
@@ -276,9 +195,11 @@ app.post('/api/updateDetails', (req, res) => {
 
 
 app.post('/api/allUsers/', (req, res) => {
-  console.log("1------allUsers :: ",req.body.userId );
+  console.log("allUsers :: ",req.body.userId );
   
  User.findAll().then((data) => {
+  
+  doLog('All User Info => ', data);
        res.send({
          message: data,
        });
@@ -293,7 +214,7 @@ app.post('/api/allUsers/', (req, res) => {
 });
 
 app.post('/api/deleteUser/', (req, res) => {
-  console.log("1------deleteUsers :: ",req.body.userId );
+  console.log("deleteUsers :: ",req.body.userId );
   
  User.destroy({
   where: {
@@ -324,53 +245,5 @@ app.post('/api/deleteUser/', (req, res) => {
 
 
 
-
-//Update Data into DB
-app.post('/db/updatePayment', (req, res) => {
-  
-  if (process.env.ENCRYPTION === 'yes') {
-    req.body = privateDec(req.body.data);
-  }
-  console.log("1------fetpym body", req.body );
-  console.log("1------fetpym",privateDec(req.body.data) );
-  delete req.body.iat;
-  // Create a Payment object
-  User.create(req.body)
-      .then((data) => {
-        res.send({
-          message: 'Payment was updated successfully.',
-        });
-      })
-      .catch((err) => {
-        res.status(500).send({
-          message:
-            err.message || 'Some error occurred while updating the Payment.',
-        });
-      });
-});
-
-
-
-//Fetch data from DB
-app.post('/db/fetchPayment', (req, res) => {
-  console.log("1------fetpym",req.body.data);
-  if (process.env.ENCRYPTION === 'yes') {
-    req.body = privateDec(req.body.data);
-  }
-  console.log("1------fetpym dec",req.body);
-  // Save PaymentInfo in the database
-  User.findAll({ })
-    .then(data => {
-      Logger.info('fetchTransData Data for => ', req.body, ' is ',JSON.stringify(data));
-      res.send(data);
-    })
-    .catch(err => {
-      Logger.info(' Data not found for => ', req.body," is ",err);
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while updating the Payment."
-      });
-    });
-});
 
 

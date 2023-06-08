@@ -19,6 +19,3 @@ __snapshots__/
 
 log/
 
-#master data files
-app/config/masterData.js
-server/data/masterData.js
