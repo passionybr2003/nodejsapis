@@ -135,9 +135,30 @@ var decodeAccessToken = (reqHeaders) => {
   }
 }
 
+const validateReq = (data,res) => {
+  let msg = '';
+  if(!data.hasOwnProperty('userId')){
+    msg = 'userId is mandatory';
+  } else if(typeof data.userId === undefined ){
+    msg = 'userId is undefined';
+  } else if(parseInt(data.userId) !== data.userId ){
+    msg = 'userId must be integer';
+  }
+  return msg;
+ 
+}
+
 app.post('/api/userDetails/', (req, res) => {
    console.log("userDetails :: ",req.body.userId );
    var jwtInfo = decodeAccessToken(req.headers);
+
+  const msg = validateReq(req.body,res);
+  if(msg !== '') {
+    return res.status(403).send({
+      message: msg,
+    });
+  }
+    
    if(jwtInfo.userId !== req.body.userId) {
         return res.status(403).send({
           message: "You do not have permission to view",
@@ -163,11 +184,24 @@ app.post('/api/userDetails/', (req, res) => {
 
 app.post('/api/updateDetails', (req, res) => {
   console.log("POST userDetails :: ",req.body );
+   const msg = validateReq(req.body,res);
+   console.log("1-----msg", msg);
+   if(msg !== '') {
+    return res.status(403).send({
+      message: msg,
+    });
+  }
   const jwtInfo = decodeAccessToken(req.headers);
+  const userInfo = req.body;
    if( jwtInfo.userType === 'user' ) {
       if(userInfo.hasOwnProperty('roleId')){
         return res.status(403).send({
           message: "You do not have permission to modify role"
+        });
+      }
+      if(userInfo.userId !== jwtInfo.userId){
+        return res.status(403).send({
+          message: "You do not have permission to modify the data"
         });
       }
    } 
@@ -229,7 +263,12 @@ app.post('/api/allUsers/', (req, res) => {
 
 app.post('/api/deleteUser/', (req, res) => {
   console.log("deleteUsers :: ",req.body.userId );
-  
+  const msg = validateReq(req.body,res);
+  if(msg !== '') {
+    return res.status(403).send({
+      message: msg,
+    });
+  }
     var jwtInfo = decodeAccessToken(req.headers);
     if(jwtInfo.userType !== 'admin'){
       return res.status(403).send({
