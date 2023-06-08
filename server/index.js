@@ -126,7 +126,19 @@ app.listen(port, host, (err) => {
   logger.appStarted(port, prettyHost);
 });
 
-
+const decodeAccessToken = (reqHeaders) => {
+  try {
+    let token = '';
+    if (reqHeaders.authorization && reqHeaders.authorization.split(' ')[0] === 'Bearer') {
+      token = reqHeaders.authorization.split(' ')[1];
+    }
+    var decoded = jwt.verify(token, jwtSalt);
+    console.log("1-------decoded",decoded);
+    return decoded;
+  } catch(err) {
+    console.log("1-----jwt verify error", err);
+  }
+}
 
 app.post('/api/userDetails/', (req, res) => {
    console.log("userDetails :: ",req.body.userId );
@@ -154,6 +166,7 @@ app.post('/api/updateDetails', (req, res) => {
   console.log("POST userDetails :: ",req.body );
  
   console.log("POST userDetails accessToken :: ",req.headers.authorization );
+  /*
   try {
     let token = '';
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -165,11 +178,15 @@ app.post('/api/updateDetails', (req, res) => {
   } catch(err) {
     console.log("jwt verify error", err);
   }
-   if(decoded?.userType === 'admin') {
-
-   } else {
-    
-   }
+  */
+  const jwtInfo = decodeAccessToken(req.headers);
+   if( jwtInfo.userType === 'user' ) {
+      if(userInfo.hasOwnProperty('roleId')){
+        res.status(403).send({
+          message: "You do not have permission to modify role"
+        });
+      }
+   } 
   const updateData = req.body;
   User.update(updateData, {
     where: { id: req.body.userId }
@@ -215,6 +232,14 @@ app.post('/api/allUsers/', (req, res) => {
 
 app.post('/api/deleteUser/', (req, res) => {
   console.log("deleteUsers :: ",req.body.userId );
+  
+    const jwtInfo = decodeAccessToken(req.headers);
+  if(jwtInfo.userType !== 'admin'){
+    res.status(403).send({
+      message: "You do not have permission to delete user",
+    });
+  }
+
   
  User.destroy({
   where: {
